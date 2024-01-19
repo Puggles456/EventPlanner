@@ -48,6 +48,7 @@ export default function EventInput(props) {
     setDate(new Date());
     setTime("");
     setTitle("");
+    setDescription("");
     setButtonTitle("Select Date");
     setButtonTitle2("Select Time");
     setImage(null);

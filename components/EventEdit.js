@@ -101,7 +101,7 @@ export default function EventEdit(props) {
     }
   }, [props.editDate]);
   useEffect(() => {
-    if (props.editTime != null) {
+    if (props.editTime != "") {
       setTime(props.editTime);
       setButtonTitle2(props.editTime);
     }

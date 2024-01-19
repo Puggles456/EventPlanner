@@ -7,6 +7,7 @@ import EventEdit from "./EventEdit";
 export default function Event(props) {
   const [modalVisible, setModalIsVisible] = useState(false);
   const [title, setTitle] = useState("");
+
   const [time, setTime] = useState("");
   const [date, setDate] = useState(new Date());
   const [dateTitle, setDateTitle] = useState("");
@@ -46,6 +47,7 @@ export default function Event(props) {
   }, [props.time]);
   useEffect(() => {
     if (props.date != null) {
+      //console.log(props.date);
       setDate(props.date);
     }
   }, [props.date]);
@@ -59,6 +61,11 @@ export default function Event(props) {
       setImage(props.image);
     }
   }, [props.image]);
+  useEffect(() => {
+    if (typeof date === "string") {
+      setDateTitle(date);
+    }
+  }, [date]);
 
   return (
     <View
@@ -119,7 +126,7 @@ export default function Event(props) {
               </View>
               <View style={{ flexDirection: "row" }}>
                 <View style={styles.container}>
-                  <Text style={styles.text}>{props.date}</Text>
+                  <Text style={styles.text}>{dateTitle}</Text>
                 </View>
                 <View>
                   <Text> - </Text>
