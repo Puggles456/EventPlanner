@@ -1,11 +1,18 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import EventEdit from "./EventEdit";
 
 export default function Event(props) {
   const [modalVisible, setModalIsVisible] = useState(false);
+  const [title, setTitle] = useState("");
+  const [time, setTime] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [dateTitle, setDateTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState(null);
+
   function makeVisible() {
     setModalIsVisible(true);
   }
@@ -13,8 +20,46 @@ export default function Event(props) {
     setModalIsVisible(false);
   }
   function editEvent(title, date, time, description, image) {
+    setTitle(title);
+    setDate(date);
+    setTime(time);
+    setDescription(description);
+    setImage(image);
     makeUnVisible();
   }
+  function stringReturn(date) {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const temp = month + "/" + day + "/" + year;
+    return temp;
+  }
+  useEffect(() => {
+    if (props.title != null) {
+      setTitle(props.title);
+    }
+  }, [props.title]);
+  useEffect(() => {
+    if (props.time != null) {
+      setTime(props.time);
+    }
+  }, [props.time]);
+  useEffect(() => {
+    if (props.date != null) {
+      setDate(props.date);
+    }
+  }, [props.date]);
+  useEffect(() => {
+    if (props.description != null) {
+      setDescription(props.description);
+    }
+  }, [props.description]);
+  useEffect(() => {
+    if (props.image != null) {
+      setImage(props.image);
+    }
+  }, [props.image]);
+
   return (
     <View
       style={[
@@ -53,16 +98,16 @@ export default function Event(props) {
               editDescription={props.description}
               editImage={props.image}
             ></EventEdit>
-            {!props.image && (
+            {!image && (
               <View style={{ marginLeft: -20 }}>
                 <EvilIcons name="image" size={120} color="grey" />
               </View>
             )}
 
             <View style={{ marginTop: 10 }}>
-              {props.image && (
+              {image && (
                 <Image
-                  source={{ uri: props.image }}
+                  source={{ uri: image }}
                   style={{ width: 100, height: 80 }}
                 />
               )}
@@ -70,9 +115,7 @@ export default function Event(props) {
 
             <View style={{ flexDirection: "column", marginLeft: 5 }}>
               <View>
-                <Text style={{ color: "#31219c", fontSize: 20 }}>
-                  {props.title}
-                </Text>
+                <Text style={{ color: "#31219c", fontSize: 20 }}>{title}</Text>
               </View>
               <View style={{ flexDirection: "row" }}>
                 <View style={styles.container}>
@@ -82,7 +125,7 @@ export default function Event(props) {
                   <Text> - </Text>
                 </View>
                 <View style={styles.container}>
-                  <Text style={styles.text}>{props.time}</Text>
+                  <Text style={styles.text}>{time}</Text>
                 </View>
               </View>
               <View
@@ -93,7 +136,7 @@ export default function Event(props) {
                 }}
               >
                 <EvilIcons name="location" size={24} color="black" />
-                <Text style={{ color: "black" }}>{props.description}</Text>
+                <Text style={{ color: "black" }}>{description}</Text>
               </View>
             </View>
           </View>
