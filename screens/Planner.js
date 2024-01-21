@@ -8,9 +8,12 @@ import {
 import { useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import Header from "../components/Header";
+import Header2 from "../components/Header2";
 import Event from "../components/Event";
 import EventInput from "./EventInput";
+
 import EventHeader from "../components/EventHeader";
 
 export default function Planner({ navigation }) {
@@ -48,7 +51,41 @@ export default function Planner({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header navigation={navigation} Name={name}></Header>
+      <Header2 navigation={navigation} Name={name}></Header2>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: 16,
+          marginTop: 5,
+        }}
+      >
+        <View
+          style={{
+            flex: 0.95,
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "lightgrey",
+            borderRadius: 10,
+            paddingHorizontal: 5,
+          }}
+        >
+          <AntDesign name="search1" size={15} color="grey" />
+          <TextInput
+            style={{
+              borderRadius: 10,
+              borderColor: "grey",
+              padding: 5,
+            }}
+            placeholder="Search"
+          ></TextInput>
+        </View>
+
+        <TouchableOpacity>
+          <Ionicons name="md-filter-outline" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
 
       <EventInput
         visible={modalVisible}
