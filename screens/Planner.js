@@ -4,17 +4,15 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  StyleSheet,
 } from "react-native";
 import { useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import Header from "../components/Header";
-import Header2 from "../components/Header2";
 import Event from "../components/Event";
 import EventInput from "./EventInput";
-
-import EventHeader from "../components/EventHeader";
 
 export default function Planner({ navigation }) {
   const [events, setEvents] = useState([]);
@@ -51,40 +49,22 @@ export default function Planner({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header2 navigation={navigation} Name={name}></Header2>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingHorizontal: 16,
-          marginTop: 5,
-        }}
-      >
-        <View
-          style={{
-            flex: 0.95,
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: "lightgrey",
-            borderRadius: 10,
-            paddingHorizontal: 5,
-          }}
-        >
-          <AntDesign name="search1" size={15} color="grey" />
-          <TextInput
+      <Header navigation={navigation} Name={name}></Header>
+      <View style={styles.searchContainer}>
+        <View style={styles.search}>
+          <View
             style={{
-              borderRadius: 10,
-              borderColor: "grey",
-              padding: 5,
+              flexDirection: "row",
+              alignItems: "center",
             }}
-            placeholder="Search"
-          ></TextInput>
+          >
+            <AntDesign name="search1" size={15} color="grey" />
+            <TextInput style={styles.input} placeholder="Search"></TextInput>
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="md-filter-outline" size={24} color="black" />
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity>
-          <Ionicons name="md-filter-outline" size={24} color="black" />
-        </TouchableOpacity>
       </View>
 
       <EventInput
@@ -123,3 +103,25 @@ export default function Planner({ navigation }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  searchContainer: {
+    flexDirection: "row",
+    paddingHorizontal: 16,
+    marginTop: 5,
+  },
+  search: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "lightgrey",
+    borderRadius: 10,
+    paddingHorizontal: 5,
+  },
+  input: {
+    borderRadius: 10,
+    borderColor: "grey",
+    padding: 5,
+  },
+});

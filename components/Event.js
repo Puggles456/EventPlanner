@@ -68,17 +68,7 @@ export default function Event(props) {
   }, [date]);
 
   return (
-    <View
-      style={[
-        {
-          backgroundColor: "white",
-          borderRadius: 8,
-          height: 100,
-          margin: 7,
-        },
-        styles.shadowStuff,
-      ]}
-    >
+    <View style={[styles.container, styles.shadowStuff]}>
       <TouchableOpacity onPress={makeVisible}>
         <View
           style={{
@@ -86,15 +76,7 @@ export default function Event(props) {
             justifyContent: "space-between",
           }}
         >
-          <View
-            style={{
-              alignItems: "center",
-
-              marginLeft: 5,
-              flexDirection: "row",
-              flex: 1,
-            }}
-          >
+          <View style={styles.card}>
             <EventEdit
               visible={modalVisible}
               onCancel={makeUnVisible}
@@ -125,13 +107,13 @@ export default function Event(props) {
                 <Text style={{ color: "#31219c", fontSize: 20 }}>{title}</Text>
               </View>
               <View style={{ flexDirection: "row" }}>
-                <View style={styles.container}>
+                <View>
                   <Text style={styles.text}>{dateTitle}</Text>
                 </View>
                 <View>
                   <Text> - </Text>
                 </View>
-                <View style={styles.container}>
+                <View>
                   <Text style={styles.text}>{time}</Text>
                 </View>
               </View>
@@ -159,13 +141,22 @@ export default function Event(props) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
-  title: {},
+  container: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    height: 100,
+    margin: 7,
+  },
   text: {
     fontSize: 14,
     color: "grey",
   },
-  card: {},
+  card: {
+    alignItems: "center",
+    marginLeft: 5,
+    flexDirection: "row",
+    flex: 1,
+  },
   shadowStuff: {
     shadowColor: "#171717",
     shadowOffset: { width: -2, height: 4 },

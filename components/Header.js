@@ -1,6 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 
 export default function Header({ navigation, Name }) {
   return (
@@ -11,6 +12,7 @@ export default function Header({ navigation, Name }) {
         alignItems: "center",
         justifyContent: "flex-start",
         paddingHorizontal: 16,
+        padding: 5,
       }}
     >
       <TouchableOpacity onPress={() => navigation.navigate("Login", {})}>
@@ -22,7 +24,7 @@ export default function Header({ navigation, Name }) {
       </View>
 
       <TouchableOpacity>
-        <Ionicons name="md-filter-outline" size={24} color="white" />
+        <Entypo name="dots-three-vertical" size={24} color="white" />
       </TouchableOpacity>
     </View>
   );

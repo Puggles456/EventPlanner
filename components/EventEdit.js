@@ -142,13 +142,19 @@ export default function EventEdit(props) {
         </View>
         <View style={{ flexDirection: "row" }}>
           <Pressable
-            style={[styles.button, { marginRight: 15 }]}
+            style={[
+              styles.button,
+              { marginRight: 10, backgroundColor: "darkslateblue" },
+            ]}
             onPress={() => showMode()}
           >
             <Text style={{ color: "white" }}>{buttontitle}</Text>
           </Pressable>
 
-          <Pressable style={styles.button} onPress={() => showMode2()}>
+          <Pressable
+            style={[styles.button, { backgroundColor: "darkslateblue" }]}
+            onPress={() => showMode2()}
+          >
             <Text style={{ color: "white" }}>{buttontitle2}</Text>
           </Pressable>
           {show && (
@@ -174,24 +180,16 @@ export default function EventEdit(props) {
         </View>
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
-            style={{
-              marginRight: 10,
-              borderWidth: 1,
-              padding: 10,
-              borderRadius: 10,
-              backgroundColor: "darkslateblue",
-            }}
+            style={[
+              styles.button,
+              { backgroundColor: "darkslateblue", marginRight: 10 },
+            ]}
             onPress={eventEditor}
           >
             <Text style={{ color: "white" }}>Submit</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{
-              borderWidth: 1,
-              padding: 10,
-              borderRadius: 10,
-              backgroundColor: "red",
-            }}
+            style={[styles.button, { backgroundColor: "red" }]}
             onPress={props.onCancel}
           >
             <Text style={{ color: "white" }}>Cancel</Text>
@@ -229,9 +227,10 @@ const styles = StyleSheet.create({
     height: 40,
   },
   button: {
+    alignItems: "center",
+    width: 100,
     borderWidth: 1,
-    padding: 10,
+    padding: 8,
     borderRadius: 10,
-    backgroundColor: "darkslateblue",
   },
 });
