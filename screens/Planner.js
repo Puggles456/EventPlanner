@@ -13,10 +13,12 @@ import { AntDesign } from "@expo/vector-icons";
 import Header from "../components/Header";
 import Event from "../components/Event";
 import EventInput from "./EventInput";
+import Drop from "../components/Drop";
 
 export default function Planner({ navigation }) {
   const [events, setEvents] = useState([]);
   const [modalVisible, setModalIsVisible] = useState(false);
+  const [dropShow, setDropShow] = useState(false);
   const route = useRoute();
   const { name } = route.params;
 
@@ -46,12 +48,16 @@ export default function Planner({ navigation }) {
       return currentEvents.filter((event) => event.id !== id);
     });
   }
+  const onPressButton = () => {
+    // Toggle the value between true and false on each press
+    setDropShow(!dropShow);
+  };
 
   return (
     <View style={{ flex: 1 }}>
       <Header navigation={navigation} Name={name}></Header>
       <View style={styles.searchContainer}>
-        <View style={styles.search}>
+        <View style={!dropShow ? styles.search : styles.pressedSearch}>
           <View
             style={{
               flexDirection: "row",
@@ -61,11 +67,12 @@ export default function Planner({ navigation }) {
             <AntDesign name="search1" size={15} color="grey" />
             <TextInput style={styles.input} placeholder="Search"></TextInput>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onPressButton}>
             <Ionicons name="md-filter-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>
       </View>
+      {dropShow && <Drop></Drop>}
 
       <EventInput
         visible={modalVisible}
@@ -117,6 +124,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "lightgrey",
     borderRadius: 10,
+    paddingHorizontal: 5,
+  },
+  pressedSearch: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "lightgrey",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderBottomLeftRadius: 10,
     paddingHorizontal: 5,
   },
   input: {
