@@ -19,6 +19,7 @@ export default function Planner({ navigation }) {
   const [events, setEvents] = useState([]);
   const [modalVisible, setModalIsVisible] = useState(false);
   const [dropShow, setDropShow] = useState(false);
+
   const route = useRoute();
   const { name } = route.params;
 
@@ -49,13 +50,13 @@ export default function Planner({ navigation }) {
     });
   }
   const onPressButton = () => {
-    // Toggle the value between true and false on each press
     setDropShow(!dropShow);
   };
 
   return (
     <View style={{ flex: 1 }}>
       <Header navigation={navigation} Name={name}></Header>
+
       <View style={styles.searchContainer}>
         <View style={!dropShow ? styles.search : styles.pressedSearch}>
           <View
