@@ -20,7 +20,7 @@ export default function Planner({ navigation }) {
   const [events, setEvents] = useState([]);
   const [modalVisible, setModalIsVisible] = useState(false);
   const [dropShow, setDropShow] = useState(false);
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortOrder, setSortOrder] = useState("");
 
   const route = useRoute();
   const { name } = route.params;
@@ -51,11 +51,17 @@ export default function Planner({ navigation }) {
       return currentEvents.filter((event) => event.id !== id);
     });
   }
-  function Acension() {
-    setSortOrder("asc");
+  function ascending() {
+    if (sortOrder != "asc") {
+      setSortOrder("asc");
+      sortDate();
+    }
   }
   function descending() {
-    setSortOrder("desc");
+    if (sortOrder != "desc") {
+      setSortOrder("desc");
+      sortDate();
+    }
   }
   const onPressButton = () => {
     setDropShow(!dropShow);
@@ -106,7 +112,6 @@ export default function Planner({ navigation }) {
     });
 
     setEvents(sortedEvents);
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
 
   const parseDate = (dateString) => {
@@ -138,7 +143,7 @@ export default function Planner({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-      {dropShow && <Drop filtered={sortDate}></Drop>}
+      {dropShow && <Drop filterAsc={ascending} filterDesc={descending}></Drop>}
 
       <EventInput
         visible={modalVisible}

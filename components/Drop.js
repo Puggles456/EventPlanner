@@ -16,10 +16,10 @@ export default function Drop(props) {
         zIndex: 1,
       }}
     >
-      <TouchableOpacity onPress={props.filtered}>
+      <TouchableOpacity onPress={props.filterAsc}>
         <Text>Sort by date</Text>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={props.filterDesc}>
         <Text>Sort by date</Text>
       </TouchableOpacity>
       <TouchableOpacity>
