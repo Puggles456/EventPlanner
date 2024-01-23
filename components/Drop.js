@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 
-export default function Drop() {
+export default function Drop(props) {
   return (
     <View
       style={{
@@ -16,7 +16,7 @@ export default function Drop() {
         zIndex: 1,
       }}
     >
-      <TouchableOpacity>
+      <TouchableOpacity onPress={props.filtered}>
         <Text>Sort by date</Text>
       </TouchableOpacity>
       <TouchableOpacity>

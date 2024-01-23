@@ -16,9 +16,11 @@ import EventInput from "./EventInput";
 import Drop from "../components/Drop";
 
 export default function Planner({ navigation }) {
+  const [input, setInput] = useState("");
   const [events, setEvents] = useState([]);
   const [modalVisible, setModalIsVisible] = useState(false);
   const [dropShow, setDropShow] = useState(false);
+  const [sortOrder, setSortOrder] = useState("asc");
 
   const route = useRoute();
   const { name } = route.params;
@@ -49,8 +51,67 @@ export default function Planner({ navigation }) {
       return currentEvents.filter((event) => event.id !== id);
     });
   }
+  function Acension() {
+    setSortOrder("asc");
+  }
+  function descending() {
+    setSortOrder("desc");
+  }
   const onPressButton = () => {
     setDropShow(!dropShow);
+  };
+
+  const filterData = ({ item }) => {
+    if (input === "") {
+      return (
+        <Event
+          id={item.id}
+          title={item.Title}
+          date={item.Date}
+          time={item.Time}
+          description={item.Description}
+          image={item.images}
+          onDeleteItem={deleteEvent}
+        />
+      );
+    }
+    if (item.Title.toLowerCase().includes(input.toLowerCase())) {
+      return (
+        <Event
+          id={item.id}
+          title={item.Title}
+          date={item.Date}
+          time={item.Time}
+          description={item.Description}
+          image={item.images}
+          onDeleteItem={deleteEvent}
+        />
+      );
+    }
+    // Handle the case when input is not empty, you can return null or an empty component
+    return null;
+  };
+
+  const sortDate = () => {
+    const sortedEvents = [...events];
+    sortedEvents.sort((a, b) => {
+      const dateA = parseDate(a.Date);
+      const dateB = parseDate(b.Date);
+
+      if (sortOrder === "asc") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    });
+
+    setEvents(sortedEvents);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  const parseDate = (dateString) => {
+    const [month, day, year] = dateString.split("/");
+    return new Date(`${year}-${month}-${day}`);
   };
 
   return (
@@ -66,14 +127,18 @@ export default function Planner({ navigation }) {
             }}
           >
             <AntDesign name="search1" size={15} color="grey" />
-            <TextInput style={styles.input} placeholder="Search"></TextInput>
+            <TextInput
+              style={styles.input}
+              placeholder="Search"
+              onChangeText={(text) => setInput(text)}
+            ></TextInput>
           </View>
           <TouchableOpacity onPress={onPressButton}>
             <Ionicons name="md-filter-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>
       </View>
-      {dropShow && <Drop></Drop>}
+      {dropShow && <Drop filtered={sortDate}></Drop>}
 
       <EventInput
         visible={modalVisible}
@@ -84,22 +149,8 @@ export default function Planner({ navigation }) {
       <View style={{ flex: 2 }}>
         <FlatList
           data={events}
-          renderItem={(itemData) => {
-            return (
-              <Event
-                id={itemData.item.id}
-                title={itemData.item.Title}
-                date={itemData.item.Date}
-                time={itemData.item.Time}
-                description={itemData.item.Description}
-                image={itemData.item.images}
-                onDeleteItem={deleteEvent}
-              />
-            );
-          }}
-          keyExtractor={(item, index) => {
-            return item.id;
-          }}
+          renderItem={({ item, index }) => filterData({ item, index })}
+          keyExtractor={(item) => item.id.toString()}
         ></FlatList>
       </View>
 
