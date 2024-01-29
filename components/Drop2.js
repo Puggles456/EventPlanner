@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 
-export default function Drop2() {
+export default function Drop2({ navigation }) {
   return (
     <View
       style={{
@@ -15,7 +15,7 @@ export default function Drop2() {
         backgroundColor: "darkslateblue",
       }}
     >
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("Login", {})}>
         <Text style={{ color: "white" }}>Sign out</Text>
       </TouchableOpacity>
       <TouchableOpacity>

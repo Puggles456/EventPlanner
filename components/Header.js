@@ -11,6 +11,9 @@ export default function Header({ navigation, Name }) {
   const onPressButton = () => {
     setDropShow(!dropShow);
   };
+  const onPressBackButton = () => {
+    navigation.goBack();
+  };
 
   return (
     <View>
@@ -24,7 +27,7 @@ export default function Header({ navigation, Name }) {
           padding: 5,
         }}
       >
-        <TouchableOpacity onPress={() => navigation.navigate("Login", {})}>
+        <TouchableOpacity onPress={onPressBackButton}>
           <Ionicons name="arrow-back-sharp" size={24} color="white" />
         </TouchableOpacity>
 
@@ -36,7 +39,7 @@ export default function Header({ navigation, Name }) {
           <Entypo name="dots-three-vertical" size={24} color="white" />
         </TouchableOpacity>
       </View>
-      {dropShow && <Drop2></Drop2>}
+      {dropShow && <Drop2 navigation={navigation}></Drop2>}
     </View>
   );
 }
