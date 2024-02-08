@@ -7,10 +7,26 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useState } from "react";
+import { auth } from "../Firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const signIn = async () => {
+    try {
+      const response = await signInWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
+      );
+
+      navigation.navigate("Birthday", {});
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View
@@ -41,10 +57,7 @@ export default function Login({ navigation }) {
           onChangeText={(text) => setPassword(text)}
         />
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Birthday", {})}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => signIn()}>
           <Text style={{ color: "white" }}>Sign In</Text>
         </TouchableOpacity>
         <TouchableOpacity

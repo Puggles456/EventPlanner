@@ -7,11 +7,34 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useState } from "react";
+import { auth, storage, firebase } from "../Firebase";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function Create({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+  const folderRef = firebase.storage().ref().child("your-folder-name");
+
+  const signUp = async () => {
+    if (password === password2) {
+      try {
+        const response = await createUserWithEmailAndPassword(
+          auth,
+          email.trim(),
+          password
+        );
+        alert("Account created succesfully");
+
+        navigation.navigate("Birthday", {});
+      } catch (error) {
+        console.log(error);
+        alert("Registration failed " + error.message);
+      }
+    } else {
+      alert("Passwords do not match");
+    }
+  };
 
   return (
     <View
@@ -47,10 +70,10 @@ export default function Create({ navigation }) {
           style={styles.input}
           secureTextEntry={true}
           placeholder="*****"
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={(text) => setPassword2(text)}
         />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => signUp()}>
           <Text style={{ color: "white" }}>Create Account</Text>
         </TouchableOpacity>
       </View>

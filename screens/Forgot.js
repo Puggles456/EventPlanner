@@ -5,11 +5,36 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useState } from "react";
+import { auth } from "../Firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 
-export default function Forgot() {
+export default function Forgot({ navigation }) {
   const [email, setEmail] = useState("");
+
+  const handlePasswordReset = () => {
+    const realEmail = email.trim();
+    if (realEmail) {
+      sendPasswordResetEmail(auth, realEmail)
+        .then(() => {
+          // Password reset email sent successfully
+
+          Alert.alert(
+            "Password Reset",
+            "Password reset email sent. Please check your inbox and follow the instructions."
+          );
+
+          navigation.navigate("Login"); // Navigate back to the login screen
+        })
+        .catch((error) => {
+          Alert.alert("Password Reset Error", error.message);
+        });
+    } else {
+      Alert.alert("Input Error", "Please enter your email address.");
+    }
+  };
 
   return (
     <View
@@ -33,7 +58,7 @@ export default function Forgot() {
           onChangeText={(text) => setEmail(text)}
         />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handlePasswordReset}>
           <Text style={{ color: "white" }}>Submit</Text>
         </TouchableOpacity>
       </View>
