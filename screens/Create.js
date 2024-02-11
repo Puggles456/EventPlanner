@@ -8,13 +8,16 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { auth, storage, firebase } from "../Firebase";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { ref, uploadBytesResumable } from "firebase/storage";
 
 export default function Create({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
-  const folderRef = firebase.storage().ref().child("your-folder-name");
 
   const signUp = async () => {
     if (password === password2) {
@@ -24,6 +27,32 @@ export default function Create({ navigation }) {
           email.trim(),
           password
         );
+        const storageRef1 = ref(storage, `${email}/January/placeholder.txt`);
+        const storageRef2 = ref(storage, `${email}/February/placeholder.txt`);
+        const storageRef3 = ref(storage, `${email}/March/placeholder.txt`);
+        const storageRef4 = ref(storage, `${email}/April/placeholder.txt`);
+        const storageRef5 = ref(storage, `${email}/May/placeholder.txt`);
+        const storageRef6 = ref(storage, `${email}/June/placeholder.txt`);
+        const storageRef7 = ref(storage, `${email}/July/placeholder.txt`);
+        const storageRef8 = ref(storage, `${email}/August/placeholder.txt`);
+        const storageRef9 = ref(storage, `${email}/September/placeholder.txt`);
+        const storageRef10 = ref(storage, `${email}/October/placeholder.txt`);
+        const storageRef11 = ref(storage, `${email}/November/placeholder.txt`);
+        const storageRef12 = ref(storage, `${email}/December/placeholder.txt`);
+
+        await uploadBytesResumable(storageRef1);
+        await uploadBytesResumable(storageRef2);
+        await uploadBytesResumable(storageRef3);
+        await uploadBytesResumable(storageRef4);
+        await uploadBytesResumable(storageRef5);
+        await uploadBytesResumable(storageRef6);
+        await uploadBytesResumable(storageRef7);
+        await uploadBytesResumable(storageRef8);
+        await uploadBytesResumable(storageRef9);
+        await uploadBytesResumable(storageRef10);
+        await uploadBytesResumable(storageRef11);
+        await uploadBytesResumable(storageRef12);
+
         alert("Account created succesfully");
 
         navigation.navigate("Birthday", {});

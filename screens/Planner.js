@@ -6,7 +6,7 @@ import {
   FlatList,
   StyleSheet,
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -14,6 +14,8 @@ import Header from "../components/Header";
 import Event from "../components/Event";
 import EventInput from "./EventInput";
 import Drop from "../components/Drop";
+import { auth, firebase } from "../Firebase";
+import { onAuthStateChanged, Auth } from "firebase/auth";
 
 export default function Planner({ navigation }) {
   const [input, setInput] = useState("");
@@ -21,6 +23,7 @@ export default function Planner({ navigation }) {
   const [modalVisible, setModalIsVisible] = useState(false);
   const [dropShow, setDropShow] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
 
   const route = useRoute();
   const { name } = route.params;
@@ -118,7 +121,22 @@ export default function Planner({ navigation }) {
     const [month, day, year] = dateString.split("/");
     return new Date(`${year}-${month}-${day}`);
   };
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in.
+        setCurrentUser(user);
+        console.log(user.email);
+      } else {
+        // No user is signed in.
+        setCurrentUser(null);
+      }
+    });
 
+    return () => unsubscribe();
+  }, []);
+
+  //checkCurrentUser();
   return (
     <View style={{ flex: 1 }}>
       <Header navigation={navigation} Name={name}></Header>
