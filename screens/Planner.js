@@ -14,8 +14,14 @@ import Header from "../components/Header";
 import Event from "../components/Event";
 import EventInput from "./EventInput";
 import Drop from "../components/Drop";
-import { auth, firebase } from "../Firebase";
-import { onAuthStateChanged, Auth } from "firebase/auth";
+import { auth, storage } from "../Firebase";
+import {
+  ref,
+  uploadBytesResumable,
+  listAll,
+  getDownloadURL,
+} from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Planner({ navigation }) {
   const [input, setInput] = useState("");
@@ -28,6 +34,21 @@ export default function Planner({ navigation }) {
   const route = useRoute();
   const { name } = route.params;
 
+  async function getEvent() {
+    const filePath = currentUser + "/" + name;
+    const folderRef = ref(storage, filePath);
+    try {
+      const result = await listAll(folderRef);
+      const fileNames = result.items.map((item) => item.name);
+      const subfolderNames = result.prefixes.map((prefix) => prefix.fullPath);
+      console.log("Files:", fileNames);
+      console.log("Subfolders:", subfolderNames);
+      // Set the file names and subfolder names to state or use them as needed in your component
+    } catch (error) {
+      console.error("Error fetching folder contents:", error);
+    }
+  }
+
   function makeVisible() {
     setModalIsVisible(true);
   }
@@ -35,7 +56,56 @@ export default function Planner({ navigation }) {
     setModalIsVisible(false);
   }
 
-  function addEvent(title, date, time, description, image) {
+  async function addEvent(title, date, time, description, image) {
+    const response = await fetch(image);
+    const blob = await response.blob();
+
+    const uniqueId = uuidv4(); // Generate a UUID
+    const filename = `${uniqueId}.jpeg`;
+    const dateSender = date.replace(/\//g, "-");
+
+    const storageRef = ref(
+      storage,
+      `${currentUser}/${name}/${title}/${filename}`
+    );
+    const storageRef2 = ref(
+      storage,
+      `${currentUser}/${name}/${title}/${dateSender}.txt`
+    );
+    const storageRef3 = ref(
+      storage,
+      `${currentUser}/${name}/${title}/${time}.txt`
+    );
+    const storageRef4 = ref(
+      storage,
+      `${currentUser}/${name}/${title}/${description}.txt`
+    );
+
+    const uploadTask = uploadBytesResumable(storageRef, blob);
+    uploadBytesResumable(storageRef2);
+    uploadBytesResumable(storageRef3);
+    uploadBytesResumable(storageRef4);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Progress tracking here if needed
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+        console.error(error);
+      },
+      () => {
+        // Handle successful uploads on complete
+        console.log("Upload successful");
+      }
+    );
+
+    await uploadBytesResumable(storageRef);
+
     setEvents((prevEvents) => [
       ...prevEvents,
       {
@@ -125,8 +195,7 @@ export default function Planner({ navigation }) {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         // User is signed in.
-        setCurrentUser(user);
-        console.log(user.email);
+        setCurrentUser(user.email);
       } else {
         // No user is signed in.
         setCurrentUser(null);
@@ -135,6 +204,11 @@ export default function Planner({ navigation }) {
 
     return () => unsubscribe();
   }, []);
+  useEffect(() => {
+    if (currentUser != null) {
+      getEvent();
+    }
+  }, [currentUser]);
 
   //checkCurrentUser();
   return (
