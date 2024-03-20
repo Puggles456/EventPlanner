@@ -20,6 +20,7 @@ import {
   uploadBytesResumable,
   listAll,
   getDownloadURL,
+  getStorage,
 } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
@@ -39,14 +40,55 @@ export default function Planner({ navigation }) {
     const folderRef = ref(storage, filePath);
     try {
       const result = await listAll(folderRef);
-      const fileNames = result.items.map((item) => item.name);
+
       const subfolderNames = result.prefixes.map((prefix) => prefix.fullPath);
-      console.log("Files:", fileNames);
-      console.log("Subfolders:", subfolderNames);
+
+      getFiles(subfolderNames);
       // Set the file names and subfolder names to state or use them as needed in your component
     } catch (error) {
       console.error("Error fetching folder contents:", error);
     }
+  }
+  async function getFiles(folders) {
+    for (let i = 0; i < folders.length; i++) {
+      const path = ref(storage, folders[i]);
+      const result = await listAll(path);
+      const fileNames = result.items.map((item) => item.name);
+      slice(fileNames, folders[i]);
+    }
+  }
+  function slice(array, folderName) {
+    let time = "";
+    let description = "";
+    let image = "";
+    let date = "";
+
+    for (let i = 0; i < array.length; i++) {
+      if (array[i].startsWith("Time")) {
+        time = array[i];
+        time = time.substring(5);
+        time = time.slice(0, -4);
+      }
+      if (array[i].startsWith("Date")) {
+        date = array[i];
+        date = date.substring(5);
+        date = date.slice(0, -4);
+      }
+      if (array[i].startsWith("Description")) {
+        description = array[i];
+        description = description.substring(12);
+        description = description.slice(0, -4);
+      }
+      if (array[i].startsWith("Image")) {
+        image = array[i];
+        //image = image.substring(6);
+      }
+    }
+    const imagePath = folderName + "/" + image;
+    const imageRef = ref(storage, imagePath);
+
+    //const storage = getStorage();
+    //At the moment this is the problem ^^
   }
 
   function makeVisible() {
@@ -66,19 +108,19 @@ export default function Planner({ navigation }) {
 
     const storageRef = ref(
       storage,
-      `${currentUser}/${name}/${title}/${filename}`
+      `${currentUser}/${name}/${title}/Image:${filename}`
     );
     const storageRef2 = ref(
       storage,
-      `${currentUser}/${name}/${title}/${dateSender}.txt`
+      `${currentUser}/${name}/${title}/Date:${dateSender}.txt`
     );
     const storageRef3 = ref(
       storage,
-      `${currentUser}/${name}/${title}/${time}.txt`
+      `${currentUser}/${name}/${title}/Time:${time}.txt`
     );
     const storageRef4 = ref(
       storage,
-      `${currentUser}/${name}/${title}/${description}.txt`
+      `${currentUser}/${name}/${title}/Description:${description}.txt`
     );
 
     const uploadTask = uploadBytesResumable(storageRef, blob);
