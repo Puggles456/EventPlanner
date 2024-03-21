@@ -20,7 +20,8 @@ import {
   uploadBytesResumable,
   listAll,
   getDownloadURL,
-  getStorage,
+  deleteObject,
+  getMetadata,
 } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
@@ -181,10 +182,31 @@ export default function Planner({ navigation }) {
     makeUnVisible();
   }
   function deleteEvent(id) {
+    const folderPath = currentUser + "/" + name + "/" + events[id].Title;
+    const folderRef = ref(storage, folderPath);
+    remove(folderRef);
+
     setEvents((currentEvents) => {
       return currentEvents.filter((event) => event.id !== id);
     });
   }
+  async function remove(folderRef) {
+    try {
+      const files = await listAll(folderRef);
+
+      const deletePromises = files.items.map((fileRef) =>
+        deleteObject(fileRef)
+      );
+
+      await Promise.all(deletePromises);
+      await deleteObject(folderRef);
+
+      console.log("Folder deleted successfully.");
+    } catch (error) {
+      //console.error("Error deleting folder:", error);
+    }
+  }
+
   function ascending() {
     if (sortOrder != "asc") {
       setSortOrder("asc");
