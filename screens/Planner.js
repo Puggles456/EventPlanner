@@ -62,6 +62,8 @@ export default function Planner({ navigation }) {
     let description = "";
     let image = "";
     let date = "";
+    let lastIndex = folderName.lastIndexOf("/");
+    const title = folderName.substring(lastIndex + 1);
 
     for (let i = 0; i < array.length; i++) {
       if (array[i].startsWith("Time")) {
@@ -81,13 +83,30 @@ export default function Planner({ navigation }) {
       }
       if (array[i].startsWith("Image")) {
         image = array[i];
-        //image = image.substring(6);
       }
     }
     const imagePath = folderName + "/" + image;
     const imageRef = ref(storage, imagePath);
 
-    //const storage = getStorage();
+    getDownloadURL(imageRef)
+      .then((url) => {
+        // `url` is the download URL for 'images/stars.jpg'
+        setEvents((prevEvents) => [
+          ...prevEvents,
+          {
+            id: events.length++,
+            Title: title,
+            Date: date,
+            Time: time,
+            Description: description,
+            images: url,
+          },
+        ]);
+      })
+      .catch((error) => {
+        // Handle any errors
+      });
+
     //At the moment this is the problem ^^
   }
 
